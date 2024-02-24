@@ -1,6 +1,6 @@
+from arepo.db import DatabaseConnection
 
 
 def main():
-    print('Hello, World!')
+    print('Initializing the database.')
 
-    return 0
