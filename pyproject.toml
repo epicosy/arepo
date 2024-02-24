@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+repository = "https://github.com/epicosy/arepo"
+homepage = "https://github.com/epicosy/arepo"
+
+[project]
+name="arepo"
+version = "0.0.1"
+description = "ORM module for the vulnerability database"
+readme = "README.md"
+authors = [
+    {name = "Eduard Pinconschi", email="eduard.pinconschi@tecnico.ulisboa.pt"}
+]
+keywords = ["orm", "vulnerability", "database"]
+license = {file = "LICENSE.txt"}
+requires-python = ">=3.9"
+classifiers = [
+    "Topic :: Software Development",
+    "Programming Language :: Python",
+    "Environment :: Console",
+    "Intended Audience :: Developers"
+]
+dependencies = [
+    "SQLAlchemy~=2.0.27",
+    "SQLAlchemy-Utils==0.39.0"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+    "twine>=1.11.0",
+    "setuptools>=38.6.0",   
+    "wheel>=0.31.0"
+]
+
+
+[tool.setuptools.packages.find]
+exclude = ["ez_setup", "tests*"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+arepo = ["tables/*"]
+
+[project.scripts]
+arepo = "arepo.main:main"
