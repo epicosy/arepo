@@ -8,7 +8,7 @@ class OperationModel(Base):
 
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String, nullable=False)
-    cwes = relationship('CWE', secondary="cwe_operation", backref='operations')
+    cwes = relationship('CWEModel', secondary="cwe_operation", backref='operations')
 
 
 class PhaseModel(Base):
@@ -18,7 +18,7 @@ class PhaseModel(Base):
     name = Column('name', String, nullable=False)
     acronym = Column('acronym', String, nullable=False)
     url = Column('url', String, nullable=True)
-    cwes = relationship('CWE', secondary="cwe_phase", backref='phases')
+    cwes = relationship('CWEModel', secondary="cwe_phase", backref='phases')
 
 
 class BFClassModel(Base):
@@ -27,4 +27,4 @@ class BFClassModel(Base):
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String, nullable=False)
     url = Column('url', String, nullable=True)
-    cwes = relationship('CWE', secondary="cwe_bf_class", backref='bf_classes')
+    cwes = relationship('CWEModel', secondary="cwe_bf_class", backref='bf_classes')

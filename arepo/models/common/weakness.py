@@ -9,7 +9,7 @@ class AbstractionModel(Base):
 
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String, nullable=False)
-    cwes = relationship('CWE', backref='abstraction')
+    cwes = relationship('CWEModel', backref='abstraction')
 
 
 class GroupingModel(Base):
@@ -29,7 +29,7 @@ class CWEModel(Base):
     name = Column('name', String, nullable=False)
     url = Column('url', String, nullable=False)
     abstraction_id = Column(Integer, ForeignKey('abstraction.id'))
-    vulnerabilities = relationship('Vulnerability', secondary="vulnerability_cwe", backref='cwes')
+    vulnerabilities = relationship('VulnerabilityModel', secondary="vulnerability_cwe", backref='cwes')
 
     def to_dict(self):
         return {'id': self.id, 'name': self.name, 'url': self.url, 'abstraction_id': self.abstraction_id}

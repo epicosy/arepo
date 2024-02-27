@@ -26,7 +26,7 @@ class CommitModel(Base):
     parents_count = Column('parents_count', Integer, nullable=True)
     repository_id = Column(String, ForeignKey('repository.id'))
     vulnerability_id = Column(String, ForeignKey('vulnerability.id'))
-    files = relationship("CommitFile", backref="commit")
+    files = relationship("CommitFileModel", backref="commit")
 
 
 class CommitFileModel(Base):
@@ -42,7 +42,7 @@ class CommitFileModel(Base):
     patch = Column('patch', String, nullable=True)
     raw_url = Column('raw_url', String, nullable=True)
     commit_id = Column(String, ForeignKey('commit.id'))
-    lines = relationship("Line", backref="commit_file")
+    lines = relationship("LineModel", backref="commit_file")
 
 
 class CommitParentModel(Base):
@@ -69,7 +69,7 @@ class RepositoryModel(Base):
     forks = Column('forks', Integer, nullable=True)
     stargazers = Column('stargazers', Integer, nullable=True)
     commits_count = Column('commits_count', Integer, nullable=True)
-    commits = relationship("Commit", backref="repository")
+    commits = relationship("CommitModel", backref="repository")
 
     def __repr__(self):
         return f"<Repository {self.owner}/{self.name}>"
@@ -80,7 +80,7 @@ class TopicModel(Base):
 
     id = Column('id', String, primary_key=True)
     name = Column('name', String, nullable=False)
-    repositories = relationship("Repository", secondary="repository_topic", backref='topics')
+    repositories = relationship("RepositoryModel", secondary="repository_topic", backref='topics')
 
     @staticmethod
     def populate(tables_path: Path):

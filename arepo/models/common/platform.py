@@ -28,7 +28,7 @@ class VendorModel(Base):
 
     id = Column('id', String, primary_key=True)
     name = Column('name', String, nullable=False)
-    products = relationship("Product", backref="vendor")
+    products = relationship("ProductModel", backref="vendor")
 
 
 class ProductModel(Base):
@@ -38,7 +38,7 @@ class ProductModel(Base):
     name = Column('name', String, nullable=False)
     vendor_id = Column(String, ForeignKey('vendor.id'))
     product_type_id = Column(Integer, ForeignKey('product_type.id'))
-    configurations = relationship("Configuration", backref="product")
+    configurations = relationship("ConfigurationModel", backref="product")
 
 
 class ProductTypeModel(Base):
@@ -46,7 +46,7 @@ class ProductTypeModel(Base):
 
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String, nullable=False)
-    products = relationship("Product", backref="product_type")
+    products = relationship("ProductModel", backref="product_type")
 
 
 class ConfigurationVulnerabilityModel(Base):
