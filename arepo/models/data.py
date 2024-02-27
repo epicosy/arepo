@@ -2,7 +2,7 @@ from arepo.models import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint, Boolean, Float
 
 
-class Dataset(Base):
+class DatasetModel(Base):
     __tablename__ = "dataset"
 
     id = Column('id', Integer, primary_key=True)
@@ -10,7 +10,7 @@ class Dataset(Base):
     description = Column('description', String, nullable=True)
 
 
-class DatasetVulnerability(Base):
+class DatasetVulnerabilityModel(Base):
     __tablename__ = 'dataset_vulnerability'
     __table_args__ = (
         PrimaryKeyConstraint('dataset_id', 'vulnerability_id'),
@@ -20,7 +20,7 @@ class DatasetVulnerability(Base):
     vulnerability_id = Column('vulnerability_id', String, ForeignKey('vulnerability.id'))
 
 
-class Profile(Base):
+class ProfileModel(Base):
     __tablename__ = "profile"
 
     id = Column('id', Integer, primary_key=True)
@@ -41,7 +41,7 @@ class Profile(Base):
     # TODO: should include the size / count
 
 
-class ProfileCWE(Base):
+class ProfileCWEModel(Base):
     __tablename__ = 'profile_cwe'
     __table_args__ = (
         PrimaryKeyConstraint('profile_id', 'cwe_id'),
@@ -51,7 +51,7 @@ class ProfileCWE(Base):
     cwe_id = Column('cwe_id', Integer, ForeignKey('cwe.id'))
 
 
-class Completion(Base):
+class CompletionModel(Base):
     # TODO: move this model to a different place
     __tablename__ = "completion"
 
@@ -67,7 +67,7 @@ class Completion(Base):
     total_tokens = Column('total_tokens', Integer, nullable=False)
 
 
-class Weakness(Base):
+class WeaknessModel(Base):
     # TODO: move this model to a different place
     __tablename__ = "weakness"
 

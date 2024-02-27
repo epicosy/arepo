@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String
 from arepo.models import Base
 
 
-class Operation(Base):
+class OperationModel(Base):
     __tablename__ = "operation"
 
     id = Column('id', Integer, primary_key=True)
@@ -11,7 +11,7 @@ class Operation(Base):
     cwes = relationship('CWE', secondary="cwe_operation", backref='operations')
 
 
-class Phase(Base):
+class PhaseModel(Base):
     __tablename__ = "phase"
 
     id = Column('id', Integer, primary_key=True)
@@ -21,7 +21,7 @@ class Phase(Base):
     cwes = relationship('CWE', secondary="cwe_phase", backref='phases')
 
 
-class BFClass(Base):
+class BFClassModel(Base):
     __tablename__ = "bf_class"
 
     id = Column('id', Integer, primary_key=True)

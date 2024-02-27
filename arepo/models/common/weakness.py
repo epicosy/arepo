@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 
 
-class Abstraction(Base):
+class AbstractionModel(Base):
     __tablename__ = "abstraction"
 
     id = Column('id', Integer, primary_key=True)
@@ -12,7 +12,7 @@ class Abstraction(Base):
     cwes = relationship('CWE', backref='abstraction')
 
 
-class Grouping(Base):
+class GroupingModel(Base):
     __tablename__ = "grouping"
     __table_args__ = (
         PrimaryKeyConstraint('parent_id', 'child_id'),
@@ -22,7 +22,7 @@ class Grouping(Base):
     child_id = Column('child_id', Integer, ForeignKey('cwe.id'))
 
 
-class CWE(Base):
+class CWEModel(Base):
     __tablename__ = "cwe"
 
     id = Column('id', Integer, primary_key=True)
@@ -35,7 +35,7 @@ class CWE(Base):
         return {'id': self.id, 'name': self.name, 'url': self.url, 'abstraction_id': self.abstraction_id}
 
 
-class CWEOperation(Base):
+class CWEOperationModel(Base):
     __tablename__ = "cwe_operation"
     __table_args__ = (
         ForeignKeyConstraint(['cwe_id'], ['cwe.id']),
@@ -46,7 +46,7 @@ class CWEOperation(Base):
     operation_id = Column(Integer, ForeignKey('operation.id'), primary_key=True)
 
 
-class CWEPhase(Base):
+class CWEPhaseModel(Base):
     __tablename__ = "cwe_phase"
     __table_args__ = (
         ForeignKeyConstraint(['cwe_id'], ['cwe.id']),
@@ -57,7 +57,7 @@ class CWEPhase(Base):
     phase_id = Column(Integer, ForeignKey('phase.id'), primary_key=True)
 
 
-class CWEBFClass(Base):
+class CWEBFClassModel(Base):
     __tablename__ = "cwe_bf_class"
     __table_args__ = (
         ForeignKeyConstraint(['cwe_id'], ['cwe.id']),

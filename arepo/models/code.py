@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
 from arepo.models import Base
 
 
-class Line(Base):
+class LineModel(Base):
     __tablename__ = "line"
 
     id = Column('id', String, primary_key=True)
@@ -12,14 +12,14 @@ class Line(Base):
     commit_file_id = Column(String, ForeignKey('commit_file.id'))
 
 
-class Label(Base):
+class LabelModel(Base):
     __tablename__ = "label"
 
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String, nullable=False)
 
 
-class LineLabel(Base):
+class LineLabelModel(Base):
     __tablename__ = "line_label"
     __table_args__ = (
         PrimaryKeyConstraint('line_id', 'label_id'),
@@ -29,7 +29,7 @@ class LineLabel(Base):
     label_id = Column('label_id', Integer, ForeignKey('label.id'))
 
 
-class Function(Base):
+class FunctionModel(Base):
     __tablename__ = "function"
 
     id = Column('id', String, primary_key=True)

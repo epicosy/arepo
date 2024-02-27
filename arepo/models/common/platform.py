@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Integer, Column, String, Boolean, ForeignKey, PrimaryKeyConstraint
 
 
-class Configuration(Base):
+class ConfigurationModel(Base):
     __tablename__ = "configuration"
 
     id = Column('id', String, primary_key=True)
@@ -23,7 +23,7 @@ class Configuration(Base):
     product_id = Column(String, ForeignKey('product.id'))
 
 
-class Vendor(Base):
+class VendorModel(Base):
     __tablename__ = "vendor"
 
     id = Column('id', String, primary_key=True)
@@ -31,7 +31,7 @@ class Vendor(Base):
     products = relationship("Product", backref="vendor")
 
 
-class Product(Base):
+class ProductModel(Base):
     __tablename__ = "product"
 
     id = Column('id', String, primary_key=True)
@@ -41,7 +41,7 @@ class Product(Base):
     configurations = relationship("Configuration", backref="product")
 
 
-class ProductType(Base):
+class ProductTypeModel(Base):
     __tablename__ = "product_type"
 
     id = Column('id', Integer, primary_key=True)
@@ -49,7 +49,7 @@ class ProductType(Base):
     products = relationship("Product", backref="product_type")
 
 
-class ConfigurationVulnerability(Base):
+class ConfigurationVulnerabilityModel(Base):
     __tablename__ = 'configuration_vulnerability'
     __table_args__ = (
         PrimaryKeyConstraint('configuration_id', 'vulnerability_id'),

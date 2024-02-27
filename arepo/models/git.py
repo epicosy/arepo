@@ -7,7 +7,7 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, P
 from arepo.models import Base
 
 
-class Commit(Base):
+class CommitModel(Base):
     __tablename__ = "commit"
 
     id = Column('id', String, primary_key=True)
@@ -29,7 +29,7 @@ class Commit(Base):
     files = relationship("CommitFile", backref="commit")
 
 
-class CommitFile(Base):
+class CommitFileModel(Base):
     __tablename__ = "commit_file"
 
     id = Column('id', String, primary_key=True)
@@ -45,7 +45,7 @@ class CommitFile(Base):
     lines = relationship("Line", backref="commit_file")
 
 
-class CommitParent(Base):
+class CommitParentModel(Base):
     __tablename__ = "commit_parent"
     __table_args__ = (
         PrimaryKeyConstraint('commit_id', 'parent_id'),
@@ -55,7 +55,7 @@ class CommitParent(Base):
     parent_id = Column('parent_id', String, ForeignKey('commit.id'))
 
 
-class Repository(Base):
+class RepositoryModel(Base):
     __tablename__ = "repository"
 
     id = Column('id', String, primary_key=True)
@@ -75,7 +75,7 @@ class Repository(Base):
         return f"<Repository {self.owner}/{self.name}>"
 
 
-class Topic(Base):
+class TopicModel(Base):
     __tablename__ = "topic"
 
     id = Column('id', String, primary_key=True)
@@ -85,10 +85,10 @@ class Topic(Base):
     @staticmethod
     def populate(tables_path: Path):
         topics_df = pd.read_csv(f'{tables_path}/topics.csv')
-        Base.metadata.bind.execute(Topic.__table__.insert(), topics_df.to_dict(orient="records"))
+        Base.metadata.bind.execute(TopicModel.__table__.insert(), topics_df.to_dict(orient="records"))
 
 
-class RepositoryTopic(Base):
+class RepositoryTopicModel(Base):
     __tablename__ = 'repository_topic'
     __table_args__ = (
         PrimaryKeyConstraint('repository_id', 'topic_id'),
@@ -98,7 +98,7 @@ class RepositoryTopic(Base):
     topic_id = Column('topic_id', String, ForeignKey('topic.id'))
 
 
-class RepositoryProductType(Base):
+class RepositoryProductTypeModel(Base):
     __tablename__ = 'repository_product_type'
     __table_args__ = (
         PrimaryKeyConstraint('repository_id', 'product_type_id'),

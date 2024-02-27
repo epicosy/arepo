@@ -13,6 +13,9 @@ class DatabaseConnection:
 
         Base.metadata.bind = self._engine
 
+        # db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+        # Base.query = db_session.query_property()
+
     @staticmethod
     def init(uri: str):
         if not database_exists(uri):
