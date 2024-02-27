@@ -5,10 +5,11 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 from sqlalchemy.engine import Engine
 
-from arepo.models.common.vulnerability import Tag
-from arepo.models.bf import BFClass, Operation, Phase
-from arepo.models.common.platform import ProductType, Vendor, Product
-from arepo.models.common.weakness import Abstraction, Grouping, CWE, CWEOperation, CWEPhase, CWEBFClass
+from arepo.models.common.vulnerability import TagModel
+from arepo.models.bf import BFClassModel, OperationModel, PhaseModel
+from arepo.models.common.platform import ProductTypeModel, VendorModel, ProductModel
+from arepo.models.common.weakness import (AbstractionModel, GroupingModel, CWEModel, CWEOperationModel, CWEPhaseModel,
+                                          CWEBFClassModel)
 
 
 tables_path = Path(__file__).parent / 'tables'
@@ -25,63 +26,63 @@ def populate(engine: Engine):
 
     with Session(engine) as session, session.begin():
 
-        if not session.query(Abstraction).all():
+        if not session.query(AbstractionModel).all():
             abstractions_df = pd.read_csv(f'{tables_path}/abstractions.csv')
-            session.add_all([Abstraction(**row.to_dict()) for i, row in abstractions_df.iterrows()])
+            session.add_all([AbstractionModel(**row.to_dict()) for i, row in abstractions_df.iterrows()])
             print("Populated 'abstractions' table.")
 
-        if not session.query(Tag).all():
+        if not session.query(TagModel).all():
             tags_df = pd.read_csv(f'{tables_path}/tags.csv')
-            session.add_all([Tag(**row.to_dict()) for i, row in tags_df.iterrows()])
+            session.add_all([TagModel(**row.to_dict()) for i, row in tags_df.iterrows()])
             print("Populated 'tags' table.")
 
-        if not session.query(Operation).all():
+        if not session.query(OperationModel).all():
             operations_df = pd.read_csv(f'{tables_path}/operations.csv')
-            session.add_all([Operation(**row.to_dict()) for i, row in operations_df.iterrows()])
+            session.add_all([OperationModel(**row.to_dict()) for i, row in operations_df.iterrows()])
             print("Populated 'operations' table.")
 
-        if not session.query(Phase).all():
+        if not session.query(PhaseModel).all():
             phases_df = pd.read_csv(f'{tables_path}/phases.csv')
-            session.add_all([Phase(**row.to_dict()) for i, row in phases_df.iterrows()])
+            session.add_all([PhaseModel(**row.to_dict()) for i, row in phases_df.iterrows()])
             print("Populated 'phases' table.")
 
-        if not session.query(BFClass).all():
+        if not session.query(BFClassModel).all():
             classes_df = pd.read_csv(f'{tables_path}/bf_classes.csv')
-            session.add_all([BFClass(**row.to_dict()) for i, row in classes_df.iterrows()])
+            session.add_all([BFClassModel(**row.to_dict()) for i, row in classes_df.iterrows()])
             print("Populated 'bf_classes' table.")
 
-        if not session.query(CWE).all():
+        if not session.query(CWEModel).all():
             cwes_df = pd.read_csv(f'{tables_path}/cwes.csv')
-            session.add_all([CWE(**row.to_dict()) for i, row in cwes_df.iterrows()])
+            session.add_all([CWEModel(**row.to_dict()) for i, row in cwes_df.iterrows()])
             print("Populated 'cwes' table.")
 
-        if not session.query(CWEOperation).all():
+        if not session.query(CWEOperationModel).all():
             cwe_operations_df = pd.read_csv(f'{tables_path}/cwe_operation.csv')
-            session.add_all([CWEOperation(**row.to_dict()) for i, row in cwe_operations_df.iterrows()])
+            session.add_all([CWEOperationModel(**row.to_dict()) for i, row in cwe_operations_df.iterrows()])
             print("Populated 'cwe_operations' table.")
 
-        if not session.query(CWEPhase).all():
+        if not session.query(CWEPhaseModel).all():
             cwe_phases_df = pd.read_csv(f'{tables_path}/cwe_phase.csv')
-            session.add_all([CWEPhase(**row.to_dict()) for i, row in cwe_phases_df.iterrows()])
+            session.add_all([CWEPhaseModel(**row.to_dict()) for i, row in cwe_phases_df.iterrows()])
             print("Populated 'cwe_phases' table.")
 
-        if not session.query(CWEBFClass).all():
+        if not session.query(CWEBFClassModel).all():
             cwe_bf_classes_df = pd.read_csv(f'{tables_path}/cwe_class.csv')
-            session.add_all([CWEBFClass(**row.to_dict()) for i, row in cwe_bf_classes_df.iterrows()])
+            session.add_all([CWEBFClassModel(**row.to_dict()) for i, row in cwe_bf_classes_df.iterrows()])
             print("Populated 'cwe_bf_classes' table.")
 
-        if not session.query(ProductType).all():
+        if not session.query(ProductTypeModel).all():
             product_types_df = pd.read_csv(f'{tables_path}/product_type.csv')
-            session.add_all([ProductType(**row.to_dict()) for i, row in product_types_df.iterrows()])
+            session.add_all([ProductTypeModel(**row.to_dict()) for i, row in product_types_df.iterrows()])
             print("Populated 'product_types' table.")
 
-        if not session.query(Vendor).all():
+        if not session.query(VendorModel).all():
             vendors_df = pd.read_csv(f'{tables_path}/vendor_product_type.csv')['vendor'].unique()
-            session.add_all([Vendor(id=hashlib.md5(vendor.encode('utf-8')).hexdigest(),
-                                    name=vendor) for vendor in vendors_df])
+            session.add_all([VendorModel(id=hashlib.md5(vendor.encode('utf-8')).hexdigest(),
+                                         name=vendor) for vendor in vendors_df])
             print("Populated 'vendors' table.")
 
-        if not session.query(Product).all():
+        if not session.query(ProductModel).all():
             vendor_product_type = pd.read_csv(f'{tables_path}/vendor_product_type.csv')
             data = []
 
@@ -93,14 +94,15 @@ def populate(engine: Engine):
                 product_id = hashlib.md5(f"{vendor}:{product}".encode('utf-8')).hexdigest()
 
                 # convert product to utf-8
-                data.append(Product(id=product_id, name=product, vendor_id=vendor_id, product_type_id=product_type))
+                data.append(ProductModel(id=product_id, name=product, vendor_id=vendor_id,
+                                         product_type_id=product_type))
 
             session.add_all(data)
             print("Populated 'products' table.")
 
-        if not session.query(Grouping).all():
+        if not session.query(GroupingModel).all():
             grouping_df = pd.read_csv(f'{tables_path}/groupings.csv')
-            session.add_all([Grouping(**row.to_dict()) for i, row in grouping_df.iterrows()])
+            session.add_all([GroupingModel(**row.to_dict()) for i, row in grouping_df.iterrows()])
             print("Populated 'grouping' table.")
 
         session.commit()
