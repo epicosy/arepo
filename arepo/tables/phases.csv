@@ -14,4 +14,4 @@ id,name,acronym,url
 13,Verification,VRF,https://samate.nist.gov/BF/Classes/_CRY/VRF.html
 14,Pseudo-Random Number,PRN,https://samate.nist.gov/BF/Classes/_RND/PRN.html
 15,True-Random Number,TRN,https://samate.nist.gov/BF/Classes/_RND/TRN.html
-16,None,None,
+16,Other,Other,

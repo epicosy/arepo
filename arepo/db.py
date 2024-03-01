@@ -1,16 +1,16 @@
 from arepo.utils import populate
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy_utils import database_exists, create_database
 from arepo.models import Base
 
 
 class DatabaseConnection:
-    def __init__(self, uri: str):
-        self.uri = uri
-        self._engine = create_engine(self.uri)
-
+    def __init__(self, uri: str, engine: Engine = None):
+        self.uri = uri if engine is None else engine.url
+        self._engine = create_engine(self.uri) if engine is None else engine
+        self._session_maker = sessionmaker(bind=self._engine)
         Base.metadata.bind = self._engine
 
         # db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
@@ -26,8 +26,12 @@ class DatabaseConnection:
         Base.metadata.create_all(engine)
         populate(engine)
 
+        return engine
+
     def get_session(self, scoped: bool = False):
         if scoped:
-            return scoped_session(sessionmaker(bind=self._engine))
+            db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=self._engine))
+            Base.query = db_session.query_property()
+            return db_session
         else:
-            return sessionmaker(bind=self._engine)()
+            return self._session_maker()
