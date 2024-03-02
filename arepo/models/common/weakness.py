@@ -38,8 +38,8 @@ class CWEModel(Base):
 class CWEOperationModel(Base):
     __tablename__ = "cwe_operation"
     __table_args__ = (
-        ForeignKeyConstraint(['cwe_id'], ['cwe.id']),
-        ForeignKeyConstraint(['operation_id'], ['operation.id'])
+        ForeignKeyConstraint(('cwe_id',), ['cwe.id']),
+        ForeignKeyConstraint(('operation_id',), ['operation.id'])
     )
 
     cwe_id = Column(Integer, ForeignKey('cwe.id'), primary_key=True)
@@ -49,8 +49,8 @@ class CWEOperationModel(Base):
 class CWEPhaseModel(Base):
     __tablename__ = "cwe_phase"
     __table_args__ = (
-        ForeignKeyConstraint(['cwe_id'], ['cwe.id']),
-        ForeignKeyConstraint(['phase_id'], ['phase.id']),
+        ForeignKeyConstraint(('cwe_id',), ['cwe.id']),
+        ForeignKeyConstraint(('phase_id',), ['phase.id']),
     )
 
     cwe_id = Column(Integer, ForeignKey('cwe.id'), primary_key=True)
@@ -60,8 +60,8 @@ class CWEPhaseModel(Base):
 class CWEBFClassModel(Base):
     __tablename__ = "cwe_bf_class"
     __table_args__ = (
-        ForeignKeyConstraint(['cwe_id'], ['cwe.id']),
-        ForeignKeyConstraint(['bf_class_id'], ['bf_class.id']),
+        ForeignKeyConstraint(('cwe_id',), ['cwe.id']),
+        ForeignKeyConstraint(('bf_class_id',), ['bf_class.id']),
     )
 
     cwe_id = Column(Integer, ForeignKey('cwe.id'), primary_key=True)
