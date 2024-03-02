@@ -13,6 +13,11 @@ from arepo.models.common.weakness import (AbstractionModel, GroupingModel, CWEMo
 
 
 tables_path = Path(__file__).parent / 'tables'
+TABLE_NAMES = {TagModel.__tablename__: TagModel, AbstractionModel.__tablename__: AbstractionModel,
+               BFClassModel.__tablename__: BFClassModel, OperationModel.__tablename__: OperationModel,
+               PhaseModel.__tablename__: PhaseModel, CWEModel.__tablename__: CWEModel,
+               ProductTypeModel.__tablename__: ProductTypeModel, VendorModel.__tablename__: VendorModel,
+               ProductModel.__tablename__: ProductModel}
 
 
 class ArepoError(Exception):

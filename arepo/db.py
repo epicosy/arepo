@@ -36,3 +36,17 @@ class DatabaseConnection:
             return db_session
         else:
             return self._session_maker()
+
+
+def get_in_memory_database() -> Engine:
+    """
+        This function initializes an in memory database and returns its engine.
+    :return:
+    """
+
+    db_uri = "sqlite:///:memory:"
+    engine = DatabaseConnection.init(db_uri)
+    print('Database initialized.')
+    print('engine:', engine)
+
+    return engine
