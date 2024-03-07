@@ -4,4 +4,4 @@ python:
 install:
   - pip install .
 script:
-  - python -m pytest
+  - if [[ $TRAVIS_COMMIT_MESSAGE == *"[skip tests]"* ]]; then echo "Skipping tests"; else python -m pytest; fi

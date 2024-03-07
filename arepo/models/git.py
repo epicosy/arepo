@@ -27,6 +27,13 @@ class CommitModel(Base):
     repository_id = Column(String, ForeignKey('repository.id'))
     vulnerability_id = Column(String, ForeignKey('vulnerability.id'))
     files = relationship("CommitFileModel", backref="commit")
+    parents = relationship(
+        "CommitModel",
+        secondary="commit_parent",
+        primaryjoin="CommitModel.id==CommitParentModel.commit_id",
+        secondaryjoin="CommitModel.id==CommitParentModel.parent_id",
+        backref="children"
+    )
 
 
 class CommitFileModel(Base):
