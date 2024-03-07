@@ -1,4 +1,6 @@
 from arepo.models import Base
+
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint, Boolean, Float
 
 
@@ -8,6 +10,7 @@ class DatasetModel(Base):
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String, nullable=False)
     description = Column('description', String, nullable=True)
+    vulnerabilities = relationship("VulnerabilityModel", secondary="dataset_vulnerability")
 
 
 class DatasetVulnerabilityModel(Base):
