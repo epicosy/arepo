@@ -12,6 +12,9 @@ class DatasetModel(Base):
     description = Column('description', String, nullable=True)
     vulnerabilities = relationship("VulnerabilityModel", secondary="dataset_vulnerability")
 
+    def __len__(self):
+        return len(self.vulnerabilities)
+
 
 class DatasetVulnerabilityModel(Base):
     __tablename__ = 'dataset_vulnerability'
