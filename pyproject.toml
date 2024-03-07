@@ -8,7 +8,7 @@ homepage = "https://github.com/epicosy/arepo"
 
 [project]
 name="arepo"
-version = "0.1.1"
+version = "0.1.2"
 description = "ORM module for the vulnerability database"
 readme = "README.md"
 authors = [
