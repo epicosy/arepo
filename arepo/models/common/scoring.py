@@ -37,9 +37,9 @@ class CVSS3(Base):
     __tablename__ = "cvss3"
 
     id = Column(String, primary_key=True)
-    #vulnerability_id = db.Column(db.String, db.ForeignKey('vulnerability.id'))
-    # cve_id = db.Column('cve_id', db.String)
-    # source = db.relationship("source", backref="vulnerability_cvss3")
+    #vulnerability_id =  Column( String,  ForeignKey('vulnerability.id'))
+    # cve_id =  Column('cve_id',  String)
+    # source =  relationship("source", backref="vulnerability_cvss3")
     type= Column('type', String, nullable=True)
     cvssData= Column('cvssData', String, nullable=True)
     exploitabilityScore=  Column('exploitabilityScore',  Float, nullable=True)
@@ -96,3 +96,33 @@ class CVSS2( Base):
     obtainOtherPrivilege =  Column('obtainOtherPrivilege',  Boolean, nullable=True)
     userInteractionRequired =  Column('userInteractionRequired',  Boolean, nullable=True)
     # cvss2 =  relationship('cvss2', secondary="cvss2_source", backref='cvss2')
+
+
+class Source( Base):
+    __tablename__ = "source"
+    id =  Column('id',  Integer, primary_key=True)# whether auto increament
+    name =  Column('name',  String)
+    link =  Column('link',  String, nullable=True)
+
+    # vulnerabilities =  relationship('Vulnerability', secondary="vulnerability_cwe", backref='cwes')
+
+
+ 
+class CVSS3Source( Base):
+    __tablename__ = 'cvss3_source'
+    __table_args__ = (
+         PrimaryKeyConstraint('cvss', 'source_id'),
+    )
+
+    cvss =   Column('cvss',  String,  ForeignKey('cvss3.id'))
+    source_id =   Column('source_id',  Integer,  ForeignKey('source.id'))
+
+class CVSS2Source( Base):
+    __tablename__ = 'cvss2_source'
+    __table_args__ = (
+         PrimaryKeyConstraint('cvss', 'source_id'),
+    )
+
+    cvss =   Column('cvss',  String,  ForeignKey('cvss2.id'))
+    source_id =   Column('source_id',  Integer,  ForeignKey('source.id'))
+
