@@ -57,6 +57,7 @@ class CVSS3(Base):
     cvssData_baseScore =  Column('cvssData_baseScore',  Float, nullable=True)
     cvssData_baseSeverity =  Column('cvssData_baseSeverity',  String, nullable=True)
     # cvss3 =  relationship('cvss3', secondary="cvss3_source", backref='cvss3')
+   
     
 class VulnerabilityCVSS2( Base):
     __tablename__ = 'vulnerability_cvss2'
@@ -106,23 +107,4 @@ class Source( Base):
 
     # vulnerabilities =  relationship('Vulnerability', secondary="vulnerability_cwe", backref='cwes')
 
-
- 
-class CVSS3Source( Base):
-    __tablename__ = 'cvss3_source'
-    __table_args__ = (
-         PrimaryKeyConstraint('cvss', 'source_id'),
-    )
-
-    cvss =   Column('cvss',  String,  ForeignKey('cvss3.id'))
-    source_id =   Column('source_id',  Integer,  ForeignKey('source.id'))
-
-class CVSS2Source( Base):
-    __tablename__ = 'cvss2_source'
-    __table_args__ = (
-         PrimaryKeyConstraint('cvss', 'source_id'),
-    )
-
-    cvss =   Column('cvss',  String,  ForeignKey('cvss2.id'))
-    source_id =   Column('source_id',  Integer,  ForeignKey('source.id'))
 
