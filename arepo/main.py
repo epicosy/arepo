@@ -2,13 +2,14 @@ import argparse
 from arepo.db import DatabaseConnection
 from arepo.utils import TABLE_NAMES
 
-
+import unittest
 def main():
     parser = argparse.ArgumentParser("Dataset interaction commands")
     parser.add_argument('-u', '--uri', help='Database URI', required=True)
     subparsers = parser.add_subparsers(dest='subparser')
     init_parser = subparsers.add_parser('init', help='Initialize the database')
     list_parser = subparsers.add_parser('list', help='List content in tables')
+    test_parser = subparsers.add_parser('test',help="run all the tests")
     list_parser.add_argument('-t', '--table', choices=list(TABLE_NAMES.keys()), help='Table to list')
     list_parser.add_argument('-l', '--limit', type=int, help='Limit the number of entries', default=20)
 
@@ -38,3 +39,12 @@ def main():
             print(entry.id, entry.name)
 
         session.close()
+    if args.subparser == "test":
+        loader = unittest.TestLoader()
+        suite = loader.discover(start_dir='tests', pattern='test_*.py')
+
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+
+
+
