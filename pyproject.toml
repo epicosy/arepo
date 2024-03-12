@@ -33,6 +33,7 @@ dependencies = [
 [project.optional-dependencies]
 test = [
     "pytest",
+    "pytest-dependency~=0.6.0",
     "pytest-cov",
     "coverage",
     "twine>=1.11.0",
