@@ -1,7 +1,7 @@
 import pytest
 import dateutil.parser as date_parser
 
-from arepo.models.git import RepositoryModel, CommitModel, CommitFileModel
+from arepo.models.vcs.core import RepositoryModel, CommitModel, CommitFileModel
 from tests.test_vulnerability import vulnerability_data
 from sqlalchemy.exc import IntegrityError
 
