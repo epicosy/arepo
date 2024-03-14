@@ -3,6 +3,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 
 from arepo.models import Base
 
+change_type = Enum('addition', 'deletion', name='change_type')
+
 
 class ChangeModel(Base):
     __tablename__ = 'change'
@@ -11,7 +13,7 @@ class ChangeModel(Base):
     content = Column('content', String, nullable=False)
     start_col = Column(Integer)
     end_col = Column(Integer)
-    type = Column(Enum('addition', 'deletion'))
+    type = Column('type', change_type)
     diff_block_id = Column(String, ForeignKey('diff_block.id'))
 
 
