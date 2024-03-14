@@ -1,10 +1,7 @@
-import pandas as pd
-from pathlib import Path
-
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, PrimaryKeyConstraint
-
 from arepo.models import Base
+
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy.orm import relationship
 
 
 class CommitModel(Base):
@@ -49,7 +46,7 @@ class CommitFileModel(Base):
     patch = Column('patch', String, nullable=True)
     raw_url = Column('raw_url', String, nullable=True)
     commit_id = Column(String, ForeignKey('commit.id'))
-    lines = relationship("LineModel", backref="commit_file")
+    diff_blocks = relationship("DiffBlockModel", backref="commit_file")
 
 
 class CommitParentModel(Base):
@@ -80,36 +77,3 @@ class RepositoryModel(Base):
 
     def __repr__(self):
         return f"<Repository {self.owner}/{self.name}>"
-
-
-class TopicModel(Base):
-    __tablename__ = "topic"
-
-    id = Column('id', String, primary_key=True)
-    name = Column('name', String, nullable=False)
-    repositories = relationship("RepositoryModel", secondary="repository_topic", backref='topics')
-
-    @staticmethod
-    def populate(tables_path: Path):
-        topics_df = pd.read_csv(f'{tables_path}/topics.csv')
-        Base.metadata.bind.execute(TopicModel.__table__.insert(), topics_df.to_dict(orient="records"))
-
-
-class RepositoryTopicModel(Base):
-    __tablename__ = 'repository_topic'
-    __table_args__ = (
-        PrimaryKeyConstraint('repository_id', 'topic_id'),
-    )
-
-    repository_id = Column('repository_id', String, ForeignKey('repository.id'))
-    topic_id = Column('topic_id', String, ForeignKey('topic.id'))
-
-
-class RepositoryProductTypeModel(Base):
-    __tablename__ = 'repository_product_type'
-    __table_args__ = (
-        PrimaryKeyConstraint('repository_id', 'product_type_id'),
-    )
-
-    repository_id = Column('repository_id', String, ForeignKey('repository.id'))
-    product_type_id = Column('product_type_id', Integer, ForeignKey('product_type.id'))

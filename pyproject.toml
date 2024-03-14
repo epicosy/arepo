@@ -8,7 +8,7 @@ homepage = "https://github.com/epicosy/arepo"
 
 [project]
 name="arepo"
-version = "0.1.4"
+version = "1.0.0"
 description = "ORM module for the vulnerability database"
 readme = "README.md"
 authors = [
@@ -33,6 +33,7 @@ dependencies = [
 [project.optional-dependencies]
 test = [
     "pytest",
+    "pytest-dependency~=0.6.0",
     "pytest-cov",
     "coverage",
     "twine>=1.11.0",

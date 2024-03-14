@@ -1,2 +1,1 @@
-from arepo.models.code import LineModel
-from arepo.models.git import CommitModel
+from arepo.models.vcs.core import CommitModel
