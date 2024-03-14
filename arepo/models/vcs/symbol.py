@@ -14,16 +14,6 @@ class LabelModel(Base):
     name = Column('name', String, nullable=False)
 
 
-class LineLabelModel(Base):
-    __tablename__ = "line_label"
-    __table_args__ = (
-        PrimaryKeyConstraint('line_id', 'label_id'),
-    )
-
-    line_id = Column('line_id', String, ForeignKey('line.id'))
-    label_id = Column('label_id', Integer, ForeignKey('label.id'))
-
-
 class FunctionModel(Base):
     __tablename__ = "function"
 
