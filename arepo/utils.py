@@ -95,8 +95,8 @@ def populate(engine: Engine):
                 vendor, product, product_type = g
                 product = str(product)
                 product_type = int(product_type)
-                vendor_id = hashlib.md5(vendor.encode('utf-8')).hexdigest()
-                product_id = hashlib.md5(f"{vendor}:{product}".encode('utf-8')).hexdigest()
+                vendor_id = get_digest(vendor)
+                product_id = get_digest(f"{vendor}:{product}")
 
                 # convert product to utf-8
                 data.append(ProductModel(id=product_id, name=product, vendor_id=vendor_id,
@@ -111,3 +111,7 @@ def populate(engine: Engine):
             print("Populated 'grouping' table.")
 
         session.commit()
+
+
+def get_digest(string: str):
+    return hashlib.md5(string.encode('utf-8')).hexdigest()
