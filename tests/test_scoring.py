@@ -1,6 +1,6 @@
 import unittest
 from arepo.db import get_in_memory_database, DatabaseConnection
-from arepo.models.common.scoring import CVSS3,CVSS2,CVSS3Source, CVSS2Source, VulnerabilityCVSS3,VulnerabilityCVSS2,Source
+from arepo.models.common.scoring import CVSS3,CVSS2,CVSS3Source, CVSS2Source,Source
 from tests.test_vulnerability import vulnerability_data
 from sqlalchemy.exc import IntegrityError
 import pytest

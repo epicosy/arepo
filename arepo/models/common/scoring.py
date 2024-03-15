@@ -24,14 +24,14 @@ class CVSS2Source(Base):
 
 
 
-class VulnerabilityCVSS3(Base):
-    __tablename__ = 'vulnerability_cvss3'
-    __table_args__ = (
-        PrimaryKeyConstraint('vulnerability_id', 'cvss3_id'),
-    )
+# class VulnerabilityCVSS3(Base):
+#     __tablename__ = 'vulnerability_cvss3'
+#     __table_args__ = (
+#         PrimaryKeyConstraint('vulnerability_id', 'cvss3_id'),
+#     )
 
-    vulnerability_id = Column('vulnerability_id', String, ForeignKey('vulnerability.id'), primary_key=True)
-    cvss3_id = Column('cvss3_id', String, ForeignKey('cvss3.id'), primary_key=True)
+#     vulnerability_id = Column('vulnerability_id', String, ForeignKey('vulnerability.id'), primary_key=True)
+#     cvss3_id = Column('cvss3_id', String, ForeignKey('cvss3.id'), primary_key=True)
 
 class CVSS3(Base):
     __tablename__ = "cvss3"
@@ -59,14 +59,14 @@ class CVSS3(Base):
     # cvss3 =  relationship('cvss3', secondary="cvss3_source", backref='cvss3')
    
     
-class VulnerabilityCVSS2( Base):
-    __tablename__ = 'vulnerability_cvss2'
-    __table_args__ = (
-         PrimaryKeyConstraint('vulnerability_id', 'cvss2_id'),
-    )
+# class VulnerabilityCVSS2( Base):
+#     __tablename__ = 'vulnerability_cvss2'
+#     __table_args__ = (
+#          PrimaryKeyConstraint('vulnerability_id', 'cvss2_id'),
+#     )
 
-    vulnerability_id =  Column('vulnerability_id',  String,  ForeignKey('vulnerability.id'), primary_key=True)
-    cvss2_id =  Column('cvss2_id',  String,  ForeignKey('cvss2.id'), primary_key=True)
+#     vulnerability_id =  Column('vulnerability_id',  String,  ForeignKey('vulnerability.id'), primary_key=True)
+#     cvss2_id =  Column('cvss2_id',  String,  ForeignKey('cvss2.id'), primary_key=True)
 
 
 class CVSS2( Base):

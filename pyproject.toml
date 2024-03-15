@@ -8,7 +8,7 @@ homepage = "https://github.com/epicosy/arepo"
 
 [project]
 name="arepo"
-version = "1.0.4"
+version = "1.0.5"
 description = "ORM module for the vulnerability database"
 readme = "README.md"
 authors = [
@@ -27,7 +27,8 @@ dependencies = [
     "SQLAlchemy~=2.0.27",
     "SQLAlchemy-Utils>=0.41.1",
     "pandas>=2.2.1",
-    "psycopg2>=2.9.9"
+    "psycopg2>=2.9.9",
+    "psycopg2-binary>=2.9.9"
 ]
 
 [project.optional-dependencies]
