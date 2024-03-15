@@ -36,8 +36,8 @@ class VulnerabilityCVSS3(Base):
 class CVSS3(Base):
     __tablename__ = "cvss3"
 
-    # id = Column(String, primary_key=True)
-    #vulnerability_id =  Column( String,  ForeignKey('vulnerability.id'))
+    id = Column(String, primary_key=True)
+    vulnerability_id =  Column( String,  ForeignKey('vulnerability.id'))
     # cve_id =  Column('cve_id',  String)
     # source =  relationship("source", backref="vulnerability_cvss3")
     type= Column('type', String, nullable=True)#whether the organization is a primary or secondary source
@@ -45,7 +45,7 @@ class CVSS3(Base):
     exploitabilityScore=  Column('exploitabilityScore',  Float, nullable=True)
     impactScore=  Column('impactScore',  Float, nullable=True)
     cvssData_version =  Column('cvssData_version',  String, nullable=True)
-    cvssData_vectorString =  Column('cvssData_vectorString',  String,  primary_key=True)
+    cvssData_vectorString =  Column('cvssData_vectorString',  String,  nullable=True)
     cvssData_attackVector =  Column('cvssData_attackVector',  String, nullable=True)
     cvssData_attackComplexity =  Column('cvssData_attackComplexity',  String, nullable=True)
     cvssData_privilegesRequired =  Column('cvssData_privilegesRequired',  String, nullable=True)
@@ -72,14 +72,14 @@ class VulnerabilityCVSS2( Base):
 class CVSS2( Base):
     __tablename__ = "cvss2"
 
-    # id =  Column( String, primary_key=True)
-    #vulnerability_id =  Column( String,  ForeignKey('vulnerability.id'))
+    id =  Column( String, primary_key=True)
+    vulnerability_id =  Column( String,  ForeignKey('vulnerability.id'))
     # cve_id =  Column('cve_id',  String)
     # source =  relationship("source", backref="vulnerability_cvss2")
     type =  Column('type',  String, nullable=True)
     # CVSSv2 Specific Columns
     cvssData_version =  Column('cvssData_version',  String, nullable=True)
-    cvssData_vectorString =  Column('cvssData_vectorString',  String,  primary_key=True)
+    cvssData_vectorString =  Column('cvssData_vectorString',  String,  nullable=True)
     cvssData_accessVector =  Column('cvssData_accessVector',  String, nullable=True)
     cvssData_accessComplexity =  Column('cvssData_accessComplexity',  String, nullable=True)
     cvssData_authentication =  Column('cvssData_authentication',  String, nullable=True)
