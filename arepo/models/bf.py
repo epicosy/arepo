@@ -1,6 +1,6 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String
-from arepo.models import Base
+from arepo.base import Base
 
 
 class OperationModel(Base):

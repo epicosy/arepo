@@ -4,7 +4,7 @@ from pathlib import Path
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
 
-from arepo.models import Base
+from arepo.base import Base
 
 
 class LabelModel(Base):

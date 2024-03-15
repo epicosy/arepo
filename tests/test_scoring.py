@@ -1,11 +1,10 @@
-import unittest
-from arepo.db import get_in_memory_database, DatabaseConnection
-from arepo.models.common.scoring import CVSS3,CVSS2,CVSS3Source, CVSS2Source,Source
+import pytest
+
+from arepo.models.common.scoring import CVSS3Model, CVSS2Model
 from tests.test_vulnerability import vulnerability_data
 from sqlalchemy.exc import IntegrityError
-import pytest
+
 # "https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2022-25854"
-       
 metric_data = {
           "cvssMetricV31": [
             {
@@ -77,14 +76,13 @@ metric_data = {
         }
 
 
-
 @pytest.mark.dependency(depends=["test_insert_vulnerability"])
 @pytest.mark.dependency(name="test_insert_CVSS3")
 def test_insert_CVSS3(database_session):
     for i, cvss_data in enumerate(metric_data["cvssMetricV31"]):
         try:
-            cvss3_instance = CVSS3(
-                                    id = f"test-cvss3-id-{i}",
+            cvss3_instance = CVSS3Model(
+                                    id=f"test-cvss3-id-{i}",
                                     type=cvss_data['type'],
                                     exploitabilityScore=cvss_data['exploitabilityScore'],
                                     impactScore=cvss_data['impactScore'],
@@ -116,8 +114,8 @@ def test_insert_CVSS2(database_session):
     for i, cvss_data_v2 in enumerate(metric_data["cvssMetricV2"]):
         try:
           
-            cvss2_instance = CVSS2(
-                                    id = f"test-cvss2-id-{i}",
+            cvss2_instance = CVSS2Model(
+                                    id=f"test-cvss2-id-{i}",
                                     type=cvss_data_v2['type'],
                                     cvssData_version=cvss_data_v2['cvssData']['version'],
                                     cvssData_vectorString=cvss_data_v2['cvssData']['vectorString'],
@@ -144,8 +142,3 @@ def test_insert_CVSS2(database_session):
         except IntegrityError:
             database_session.rollback()
             pytest.fail("IntegrityError occurred while inserting vulnerability")
-
-        
-
-if __name__ == "__main__":
-    unittest.main()
