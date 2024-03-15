@@ -22,5 +22,5 @@ class DiffBlockModel(Base):
     id = Column(String, primary_key=True)
     order = Column(Integer)
     changes = relationship("ChangeModel", backref="diff_block")
-    a_path = Column('b_path', String, nullable=False)
+    a_path = Column('a_path', String, nullable=False)
     commit_file_id = Column(String, ForeignKey('commit_file.id'))
