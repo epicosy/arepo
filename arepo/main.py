@@ -2,7 +2,7 @@ import argparse
 from arepo.db import DatabaseConnection
 from arepo.utils import TABLE_NAMES
 
-
+import unittest
 def main():
     parser = argparse.ArgumentParser("Dataset interaction commands")
     parser.add_argument('-u', '--uri', help='Database URI', required=True)
@@ -38,3 +38,5 @@ def main():
             print(entry.id, entry.name)
 
         session.close()
+
+
