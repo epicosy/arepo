@@ -25,6 +25,7 @@ class FunctionModel(Base):
     end_line = Column('end_line', Integer, nullable=False)
     end_col = Column('end_col', Integer, nullable=False)
     size = Column('size', Integer, nullable=False)
+    content = Column('content', String, nullable=False)
 
 
 class TopicModel(Base):
