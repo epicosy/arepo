@@ -47,6 +47,7 @@ class CommitFileModel(Base):
     raw_url = Column('raw_url', String, nullable=True)
     commit_id = Column(String, ForeignKey('commit.id'))
     diff_blocks = relationship("DiffBlockModel", backref="commit_file")
+    functions = relationship("FunctionModel", backref="commit_file")
 
 
 class CommitParentModel(Base):
