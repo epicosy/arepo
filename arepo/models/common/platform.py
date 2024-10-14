@@ -1,4 +1,4 @@
-from arepo.models import Base
+from arepo.base import Base
 
 from sqlalchemy.orm import relationship
 from sqlalchemy import Integer, Column, String, Boolean, ForeignKey, PrimaryKeyConstraint

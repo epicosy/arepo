@@ -1,7 +1,7 @@
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 
-from arepo.models import Base
+from arepo.base import Base
 
 change_type = Enum('addition', 'deletion', name='change_type')
 

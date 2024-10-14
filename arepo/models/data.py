@@ -1,4 +1,4 @@
-from arepo.models import Base
+from arepo.base import Base
 
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint, Boolean, Float
@@ -34,6 +34,7 @@ class ProfileModel(Base):
     has_code = Column('has_code', Boolean, nullable=False)
     has_exploit = Column('has_exploit', Boolean, nullable=False)
     has_advisory = Column('has_advisory', Boolean, nullable=False)
+    single_commit = Column('single_commit', Boolean, nullable=False)
     start_year = Column('start_year', Integer, nullable=False)
     end_year = Column('end_year', Integer, nullable=True)
     start_score = Column('start_score', Float, nullable=False)

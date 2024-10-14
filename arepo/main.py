@@ -38,3 +38,4 @@ def main():
             print(entry.id, entry.name)
 
         session.close()
+
