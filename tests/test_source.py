@@ -6,6 +6,10 @@ source_data = [
     {
         "name": "Snyk",
         "email": "report@snyk.io"
+    },
+    {
+        "name": "NVD",
+        "email": "nvd@nist.gov"
     }
 ]
 
