@@ -5,7 +5,7 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 from sqlalchemy.engine import Engine
 
-from arepo.models.common.vulnerability import TagModel
+from arepo.models.common.reference import TagModel
 from arepo.models.bf import BFClassModel, OperationModel, PhaseModel
 from arepo.models.common.platform import ProductTypeModel, VendorModel, ProductModel
 from arepo.models.common.weakness import (AbstractionModel, GroupingModel, CWEModel, CWEOperationModel, CWEPhaseModel,

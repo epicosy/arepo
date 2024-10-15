@@ -1,26 +1,28 @@
 from arepo.base import Base
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float, PrimaryKeyConstraint
+from sqlalchemy import Column, String, ForeignKey, Boolean, Float, ForeignKeyConstraint
 
 
 class CVSS3SourceModel(Base):
     __tablename__ = 'cvss3_source'
     __table_args__ = (
-        PrimaryKeyConstraint('cvss', 'source_id'),
+        ForeignKeyConstraint(('cvss_id',), ['cvss3.id']),
+        ForeignKeyConstraint(('source_id',), ['source.id'])
     )
 
-    cvss = Column('cvss', String, ForeignKey('cvss3.id'))
-    source_id = Column('source_id', Integer, ForeignKey('source.id'))
+    cvss_id = Column(String, ForeignKey('cvss3.id'), primary_key=True)
+    source_id = Column(String, ForeignKey('source.id'), primary_key=True)
 
 
 class CVSS2SourceModel(Base):
     __tablename__ = 'cvss2_source'
     __table_args__ = (
-        PrimaryKeyConstraint('cvss', 'source_id'),
+        ForeignKeyConstraint(('cvss_id',), ['cvss2.id']),
+        ForeignKeyConstraint(('source_id',), ['source.id'])
     )
 
-    cvss = Column('cvss', String, ForeignKey('cvss2.id'))
-    source_id = Column('source_id', Integer, ForeignKey('source.id'))
+    cvss_id = Column(String, ForeignKey('cvss2.id'), primary_key=True)
+    source_id = Column(String, ForeignKey('source.id'), primary_key=True)
 
 
 # class VulnerabilityCVSS3(Base):
@@ -97,12 +99,3 @@ class CVSS2Model(Base):
     obtainOtherPrivilege = Column('obtainOtherPrivilege', Boolean, nullable=True)
     userInteractionRequired = Column('userInteractionRequired', Boolean, nullable=True)
     # cvss2 =  relationship('cvss2', secondary="cvss2_source", backref='cvss2')
-
-
-class SourceModel(Base):
-    __tablename__ = "source"
-    id = Column('id', Integer, primary_key=True)  # whether auto increament
-    name = Column('name', String)
-    link = Column('link', String, nullable=True)
-
-    # vulnerabilities =  relationship('Vulnerability', secondary="vulnerability_cwe", backref='cwes')
