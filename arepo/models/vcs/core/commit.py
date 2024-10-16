@@ -1,6 +1,7 @@
 from arepo.base import Base
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy import (Column, Integer, String, Boolean, DateTime, ForeignKey, PrimaryKeyConstraint,
+                        ForeignKeyConstraint)
 from sqlalchemy.orm import relationship
 
 
@@ -9,7 +10,6 @@ class CommitModel(Base):
 
     id = Column('id', String, primary_key=True)
     sha = Column('sha', String, nullable=False)
-    url = Column('url', String, nullable=False)
     kind = Column('kind', String, nullable=False)
     date = Column('date', DateTime, nullable=True)
     state = Column('state', String, nullable=True)
@@ -22,7 +22,6 @@ class CommitModel(Base):
     files_count = Column('files_count', Integer, nullable=True)
     parents_count = Column('parents_count', Integer, nullable=True)
     repository_id = Column(String, ForeignKey('repository.id'))
-    vulnerability_id = Column(String, ForeignKey('vulnerability.id'))
     files = relationship("CommitFileModel", backref="commit")
     parents = relationship(
         "CommitModel",
@@ -31,6 +30,19 @@ class CommitModel(Base):
         secondaryjoin="CommitModel.id==CommitParentModel.parent_id",
         backref="children"
     )
+
+
+class CommitAssociationModel(Base):
+    __tablename__ = "commit_association"
+    __table_args__ = (
+        ForeignKeyConstraint(('commit_id',), ['commit.id']),
+        ForeignKeyConstraint(('vulnerability_id',), ['vulnerability.id']),
+        ForeignKeyConstraint(('source_id',), ['source.id']),
+    )
+
+    commit_id = Column(String, ForeignKey('commit.id'), primary_key=True)
+    vulnerability_id = Column(String, ForeignKey('vulnerability.id'), primary_key=True)
+    source_id = Column(String, ForeignKey('source.id'), primary_key=True)
 
 
 class CommitFileModel(Base):
@@ -58,23 +70,3 @@ class CommitParentModel(Base):
 
     commit_id = Column('commit_id', String, ForeignKey('commit.id'))
     parent_id = Column('parent_id', String, ForeignKey('commit.id'))
-
-
-class RepositoryModel(Base):
-    __tablename__ = "repository"
-
-    id = Column('id', String, primary_key=True)
-    name = Column('name', String, nullable=False)
-    owner = Column('owner', String, nullable=False)
-    available = Column('available', Boolean, nullable=True)
-    description = Column('description', String, nullable=True)
-    language = Column('language', String, nullable=True)
-    size = Column('size', Integer, nullable=True)
-    watchers = Column('watchers', Integer, nullable=True)
-    forks = Column('forks', Integer, nullable=True)
-    stargazers = Column('stargazers', Integer, nullable=True)
-    commits_count = Column('commits_count', Integer, nullable=True)
-    commits = relationship("CommitModel", backref="repository")
-
-    def __repr__(self):
-        return f"<Repository {self.owner}/{self.name}>"

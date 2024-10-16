@@ -1,4 +1,4 @@
-from arepo.models.vcs.core import CommitModel
+from arepo.models.vcs.core.commit import CommitModel
 from arepo.models.source import SourceModel
 from arepo.models.common.scoring import *
 from arepo.models.common.platform import *

@@ -1,24 +1,10 @@
 import pytest
 import dateutil.parser as date_parser
 
-from arepo.models.vcs.core import RepositoryModel, CommitModel, CommitFileModel
-from tests.test_vulnerability import vulnerability_data
 from sqlalchemy.exc import IntegrityError
 
-
-# Mocked vulnerability data
-repository_data = {
-    'id': 'test-id',
-    "name": 'tagify',
-    "owner": 'yairEO',
-    'available': True,
-    'description': 'tags input component',
-    'language': 'JavaScript',
-    'size': 5410,
-    'watchers': 20,
-    'forks': 420,
-    'stargazers': 3225
-}
+from arepo.models.source import SourceModel
+from arepo.models.vcs.core.commit import CommitModel, CommitFileModel, CommitAssociationModel
 
 
 commit_data = {
@@ -36,8 +22,8 @@ commit_data = {
     'deletions': 1,
     'files_count': 1,
     'parents_count': 1,
-    'repository_id': repository_data['id'],
-    'vulnerability_id': vulnerability_data['cve']['id']
+    'repository_id': 'test-id',
+    'vulnerability_id': 'CVE-2022-25854'
 }
 
 
@@ -55,31 +41,6 @@ commit_file_data = {
 }
 
 
-@pytest.mark.dependency(name="insert_repository")
-def test_insert_repository(database_session):
-    try:
-        # Creating VulnerabilityModel object
-        repository = RepositoryModel(
-            id=repository_data['id'],
-            name=repository_data['name'],
-            owner=repository_data['owner'],
-            available=repository_data['available'],
-            description=repository_data['description'],
-            language=repository_data['language'],
-            size=repository_data['size'],
-            watchers=repository_data['watchers'],
-            forks=repository_data['forks'],
-            stargazers=repository_data['stargazers']
-        )
-
-        # Inserting the object into the database
-        database_session.add(repository)
-        database_session.commit()
-    except IntegrityError:
-        database_session.rollback()
-        pytest.fail("IntegrityError occurred while inserting vulnerability")
-
-
 @pytest.mark.dependency(depends=["insert_repository"])
 @pytest.mark.dependency(depends=["test_insert_vulnerability"])
 @pytest.mark.dependency(name="test_insert_commit")
@@ -89,7 +50,6 @@ def test_insert_commit(database_session):
         commit = CommitModel(
             id=commit_data['id'],
             sha=commit_data['sha'],
-            url=commit_data['url'],
             kind=commit_data['kind'],
             date=commit_data['date'],
             state=commit_data['state'],
@@ -101,12 +61,23 @@ def test_insert_commit(database_session):
             deletions=commit_data['deletions'],
             files_count=commit_data['files_count'],
             parents_count=commit_data['parents_count'],
-            repository_id=commit_data['repository_id'],
-            vulnerability_id=commit_data['vulnerability_id']
+            repository_id=commit_data['repository_id']
         )
 
         # Inserting the object into the database
         database_session.add(commit)
+        database_session.commit()
+
+        source_id = database_session.query(SourceModel).filter_by(email="report@snyk.io").first().id
+        # Creating CommitAssociationModel object
+
+        commit_association = CommitAssociationModel(
+            commit_id=commit_data['id'],
+            vulnerability_id=commit_data['vulnerability_id'],
+            source_id=source_id
+        )
+
+        database_session.add(commit_association)
         database_session.commit()
     except IntegrityError:
         database_session.rollback()
@@ -138,31 +109,12 @@ def test_insert_commit_file(database_session):
         pytest.fail("IntegrityError occurred while inserting vulnerability")
 
 
-@pytest.mark.dependency(depends=["insert_repository"])
-def test_query_repository(database_session):
-    # Querying the database for the object
-    result = database_session.query(RepositoryModel).filter(RepositoryModel.id == repository_data['id']).first()
-
-    # Asserting the result
-    assert result.id == repository_data['id']
-    assert result.name == repository_data['name']
-    assert result.owner == repository_data['owner']
-    assert result.available == repository_data['available']
-    assert result.description == repository_data['description']
-    assert result.language == repository_data['language']
-    assert result.size == repository_data['size']
-    assert result.watchers == repository_data['watchers']
-    assert result.forks == repository_data['forks']
-    assert result.stargazers == repository_data['stargazers']
-
-
 @pytest.mark.dependency(depends=["test_insert_commit"])
 def test_query_commit(database_session):
     result = database_session.query(CommitModel).filter(CommitModel.id == commit_data['id']).first()
 
     assert result.id == commit_data['id']
     assert result.sha == commit_data['sha']
-    assert result.url == commit_data['url']
     assert result.kind == commit_data['kind']
     assert result.date.date() == commit_data['date'].date()
     assert result.state == commit_data['state']
@@ -175,7 +127,15 @@ def test_query_commit(database_session):
     assert result.files_count == commit_data['files_count']
     assert result.parents_count == commit_data['parents_count']
     assert result.repository_id == commit_data['repository_id']
-    assert result.vulnerability_id == commit_data['vulnerability_id']
+
+    source_id = database_session.query(SourceModel).filter_by(email="report@snyk.io").first().id
+    association = (database_session.query(CommitAssociationModel)
+                   .filter_by(commit_id=commit_data['id'])
+                   .filter_by(vulnerability_id=commit_data['vulnerability_id'])
+                   .filter_by(source_id=source_id)
+                   .first())
+
+    assert association.commit_id is not None
 
 
 @pytest.mark.dependency(depends=["test_insert_commit_file"])
