@@ -40,7 +40,7 @@ class ReferenceAssociationModel(Base):
 
     reference_id = Column(String, ForeignKey('reference.id'), primary_key=True)
     vulnerability_id = Column(String, ForeignKey('vulnerability.id'), primary_key=True)
-    source_id = Column(Integer, ForeignKey('source.id'), primary_key=True)
+    source_id = Column(String, ForeignKey('source.id'), primary_key=True)
 
     # Define the relationships
     vulnerability = relationship("VulnerabilityModel", backref="reference_vulnerabilities")

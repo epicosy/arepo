@@ -7,7 +7,7 @@ class CPEModel(Base):
     __tablename__ = "cpe"
 
     id = Column('id', String, primary_key=True)
-    product_id = Column(Integer, ForeignKey('product.id'), nullable=False)
+    product_id = Column(String, ForeignKey('product.id'), nullable=False)
     version = Column(String, nullable=True, default="*")
     update = Column(String, nullable=True, default="*")
     edition = Column(String, nullable=True, default="*")
