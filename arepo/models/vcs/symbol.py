@@ -49,14 +49,3 @@ class RepositoryTopicModel(Base):
 
     repository_id = Column('repository_id', String, ForeignKey('repository.id'))
     topic_id = Column('topic_id', String, ForeignKey('topic.id'))
-
-
-# TODO: find a better place for this
-class RepositoryProductTypeModel(Base):
-    __tablename__ = 'repository_product_type'
-    __table_args__ = (
-        PrimaryKeyConstraint('repository_id', 'product_type_id'),
-    )
-
-    repository_id = Column('repository_id', String, ForeignKey('repository.id'))
-    product_type_id = Column('product_type_id', Integer, ForeignKey('product_type.id'))

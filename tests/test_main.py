@@ -25,9 +25,7 @@ class TestInitCommand(unittest.TestCase):
             "Populated 'cwe_operations' table.\n"
             "Populated 'cwe_phases' table.\n"
             "Populated 'cwe_bf_classes' table.\n"
-            "Populated 'product_types' table.\n"
             "Populated 'vendors' table.\n"
-            "Populated 'products' table.\n"
             "Populated 'grouping' table.\n"
         )
 

@@ -5,19 +5,19 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 from sqlalchemy.engine import Engine
 
-from arepo.models.common.vulnerability import TagModel
 from arepo.models.bf import BFClassModel, OperationModel, PhaseModel
-from arepo.models.common.platform import ProductTypeModel, VendorModel, ProductModel
+from arepo.models.common.reference import TagModel
+from arepo.models.common.platform.vendor import VendorModel
 from arepo.models.common.weakness import (AbstractionModel, GroupingModel, CWEModel, CWEOperationModel, CWEPhaseModel,
                                           CWEBFClassModel)
 
 
 tables_path = Path(__file__).parent / 'tables'
-TABLE_NAMES = {TagModel.__tablename__: TagModel, AbstractionModel.__tablename__: AbstractionModel,
-               BFClassModel.__tablename__: BFClassModel, OperationModel.__tablename__: OperationModel,
-               PhaseModel.__tablename__: PhaseModel, CWEModel.__tablename__: CWEModel,
-               ProductTypeModel.__tablename__: ProductTypeModel, VendorModel.__tablename__: VendorModel,
-               ProductModel.__tablename__: ProductModel}
+TABLE_NAMES = {
+    TagModel.__tablename__: TagModel, AbstractionModel.__tablename__: AbstractionModel,
+    BFClassModel.__tablename__: BFClassModel, OperationModel.__tablename__: OperationModel,
+    PhaseModel.__tablename__: PhaseModel, CWEModel.__tablename__: CWEModel, VendorModel.__tablename__: VendorModel
+}
 
 
 class ArepoError(Exception):
@@ -76,34 +76,12 @@ def populate(engine: Engine):
             session.add_all([CWEBFClassModel(**row.to_dict()) for i, row in cwe_bf_classes_df.iterrows()])
             print("Populated 'cwe_bf_classes' table.")
 
-        if not session.query(ProductTypeModel).all():
-            product_types_df = pd.read_csv(f'{tables_path}/product_type.csv')
-            session.add_all([ProductTypeModel(**row.to_dict()) for i, row in product_types_df.iterrows()])
-            print("Populated 'product_types' table.")
-
         if not session.query(VendorModel).all():
             vendors_df = pd.read_csv(f'{tables_path}/vendor_product_type.csv')['vendor'].unique()
             session.add_all([VendorModel(id=hashlib.md5(vendor.encode('utf-8')).hexdigest(),
                                          name=vendor) for vendor in vendors_df])
             print("Populated 'vendors' table.")
 
-        if not session.query(ProductModel).all():
-            vendor_product_type = pd.read_csv(f'{tables_path}/vendor_product_type.csv')
-            data = []
-
-            for g, _ in vendor_product_type.groupby(['vendor', 'product', 'product_type']):
-                vendor, product, product_type = g
-                product = str(product)
-                product_type = int(product_type)
-                vendor_id = get_digest(vendor)
-                product_id = get_digest(f"{vendor}:{product}")
-
-                # convert product to utf-8
-                data.append(ProductModel(id=product_id, name=product, vendor_id=vendor_id,
-                                         product_type_id=product_type))
-
-            session.add_all(data)
-            print("Populated 'products' table.")
 
         if not session.query(GroupingModel).all():
             grouping_df = pd.read_csv(f'{tables_path}/groupings.csv')

@@ -1,7 +1,7 @@
 import pytest
 
 from arepo.models.vcs.diff import DiffBlockModel, ChangeModel
-from tests.test_vcs_core import commit_file_data
+
 
 diff_data = {
     'diff_blocks': [
@@ -27,7 +27,7 @@ diff_data = {
                     'content': '        _s.placeholder = escapeHTML(input.getAttribute(\'placeholder\') || _s.placeholder || "")',
                 }
             ],
-            'commit_file_id': commit_file_data['id']
+            'commit_file_id': 'test-commit-file-id'
         }
     ]
 }

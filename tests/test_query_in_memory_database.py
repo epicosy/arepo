@@ -1,6 +1,6 @@
 import unittest
 from arepo.db import get_in_memory_database, DatabaseConnection
-from arepo.models.common.vulnerability import TagModel
+from arepo.models.common.reference import TagModel
 
 
 class TestInMemoryDatabaseQuery(unittest.TestCase):
