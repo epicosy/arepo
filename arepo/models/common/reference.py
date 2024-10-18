@@ -1,15 +1,7 @@
 from arepo.base import Base
 
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint
-
-
-class TagModel(Base):
-    __tablename__ = "tag"
-
-    id = Column('id', Integer, primary_key=True)
-    name = Column('name', String, nullable=False)
-    references = relationship("ReferenceModel", secondary="reference_tag", backref='tags')
+from sqlalchemy import Column, String, ForeignKey, ForeignKeyConstraint
 
 
 class ReferenceModel(Base):
@@ -18,16 +10,16 @@ class ReferenceModel(Base):
     id = Column('id', String, primary_key=True)
     url = Column('url', String, nullable=False)
 
-
-class ReferenceTagModel(Base):
-    __tablename__ = 'reference_tag'
-    __table_args__ = (
-        ForeignKeyConstraint(('reference_id',), ['reference.id']),
-        ForeignKeyConstraint(('tag_id',), ['tag.id']),
+    # Relationship to ReferenceAssociationModel
+    associations = relationship(
+        'ReferenceAssociationModel',
+        back_populates='reference'
     )
 
-    reference_id = Column(String, ForeignKey('reference.id'), primary_key=True)
-    tag_id = Column(Integer, ForeignKey('tag.id'), primary_key=True)
+    tags = relationship(
+        'TagAssociationModel',
+        back_populates='reference'
+    )
 
 
 class ReferenceAssociationModel(Base):
@@ -43,6 +35,6 @@ class ReferenceAssociationModel(Base):
     source_id = Column(String, ForeignKey('source.id'), primary_key=True)
 
     # Define the relationships
-    vulnerability = relationship("VulnerabilityModel", backref="reference_vulnerabilities")
-    reference = relationship("ReferenceModel", backref="reference_vulnerabilities")
-    source = relationship("SourceModel", backref="reference_vulnerabilities")
+    vulnerability = relationship("VulnerabilityModel", back_populates="references")
+    reference = relationship("ReferenceModel", back_populates="associations")
+    source = relationship("SourceModel", back_populates="references")

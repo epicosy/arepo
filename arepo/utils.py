@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.engine import Engine
 
 from arepo.models.bf import BFClassModel, OperationModel, PhaseModel
-from arepo.models.common.reference import TagModel
+from arepo.models.common.tag import TagModel
 from arepo.models.common.platform.vendor import VendorModel
 from arepo.models.common.weakness import (AbstractionModel, GroupingModel, CWEModel, CWEOperationModel, CWEPhaseModel,
                                           CWEBFClassModel)
@@ -81,7 +81,6 @@ def populate(engine: Engine):
             session.add_all([VendorModel(id=hashlib.md5(vendor.encode('utf-8')).hexdigest(),
                                          name=vendor) for vendor in vendors_df])
             print("Populated 'vendors' table.")
-
 
         if not session.query(GroupingModel).all():
             grouping_df = pd.read_csv(f'{tables_path}/groupings.csv')
