@@ -1,6 +1,7 @@
 from arepo.base import Base
 
 from sqlalchemy import Column, String, ForeignKey, Boolean, Float, ForeignKeyConstraint
+from sqlalchemy.orm import relationship
 
 
 class CVSS2Model(Base):
@@ -27,6 +28,11 @@ class CVSS2Model(Base):
     # type = Column('type', String, nullable=True)  # TODO: to be added later
     # version = Column('version', String, nullable=True)  # TODO: put back if needed
 
+    associations = relationship(
+        "CVSS2AssociationModel",
+        back_populates="cvss"
+    )
+
 
 # TODO: there must be a better way to handle this
 class CVSS2AssociationModel(Base):
@@ -40,3 +46,7 @@ class CVSS2AssociationModel(Base):
     cvss_id = Column(String, ForeignKey('cvss2.id'), primary_key=True)
     source_id = Column(String, ForeignKey('source.id'), primary_key=True)
     vulnerability_id = Column(String, ForeignKey('vulnerability.id'), primary_key=True)
+
+    cvss = relationship("CVSS2Model", back_populates="associations")
+    source = relationship("SourceModel", back_populates="cvss2")
+    vulnerability = relationship("VulnerabilityModel", back_populates="cvss2")

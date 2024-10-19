@@ -21,3 +21,13 @@ class SourceModel(Base):
         'TagAssociationModel',
         back_populates='source'
     )
+
+    cvss2 = relationship(
+        'CVSS2AssociationModel',
+        back_populates='source'
+    )
+
+    cvss3 = relationship(
+        'CVSS3AssociationModel',
+        back_populates='source'
+    )

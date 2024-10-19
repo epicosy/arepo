@@ -1,4 +1,6 @@
 from arepo.base import Base
+
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey, Float, ForeignKeyConstraint
 
 
@@ -33,6 +35,11 @@ class CVSS3Model(Base):
     impact_score = Column('impact_score', Float, nullable=True)
     # type = Column('type', String, nullable=True)  # TODO: to be added later
 
+    associations = relationship(
+        "CVSS3AssociationModel",
+        back_populates="cvss"
+    )
+
 
 # TODO: there must be a better way to handle this
 class CVSS3AssociationModel(Base):
@@ -46,3 +53,8 @@ class CVSS3AssociationModel(Base):
     cvss_id = Column(String, ForeignKey('cvss3.id'), primary_key=True)
     source_id = Column(String, ForeignKey('source.id'), primary_key=True)
     vulnerability_id = Column(String, ForeignKey('vulnerability.id'), primary_key=True)
+
+    cvss = relationship("CVSS3Model", back_populates="associations")
+    source = relationship("SourceModel", back_populates="cvss3")
+    vulnerability = relationship("VulnerabilityModel", back_populates="cvss3")
+
