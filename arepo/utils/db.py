@@ -1,5 +1,4 @@
 import pandas as pd
-import hashlib
 from pathlib import Path
 
 from sqlalchemy.orm import Session
@@ -11,18 +10,16 @@ from arepo.models.common.platform.vendor import VendorModel
 from arepo.models.common.weakness import (AbstractionModel, GroupingModel, CWEModel, CWEOperationModel, CWEPhaseModel,
                                           CWEBFClassModel)
 
+from arepo.utils.misc import generate_id
 
-tables_path = Path(__file__).parent / 'tables'
+
+tables_path = Path(__file__).parent.parent / 'tables'
+
 TABLE_NAMES = {
     TagModel.__tablename__: TagModel, AbstractionModel.__tablename__: AbstractionModel,
     BFClassModel.__tablename__: BFClassModel, OperationModel.__tablename__: OperationModel,
     PhaseModel.__tablename__: PhaseModel, CWEModel.__tablename__: CWEModel, VendorModel.__tablename__: VendorModel
 }
-
-
-class ArepoError(Exception):
-    """Generic errors."""
-    pass
 
 
 def populate(engine: Engine):
@@ -78,8 +75,7 @@ def populate(engine: Engine):
 
         if not session.query(VendorModel).all():
             vendors_df = pd.read_csv(f'{tables_path}/vendor_product_type.csv')['vendor'].unique()
-            session.add_all([VendorModel(id=hashlib.md5(vendor.encode('utf-8')).hexdigest(),
-                                         name=vendor) for vendor in vendors_df])
+            session.add_all([VendorModel(id=generate_id(vendor), name=vendor) for vendor in vendors_df])
             print("Populated 'vendors' table.")
 
         if not session.query(GroupingModel).all():
@@ -88,7 +84,3 @@ def populate(engine: Engine):
             print("Populated 'grouping' table.")
 
         session.commit()
-
-
-def get_digest(string: str):
-    return hashlib.md5(string.encode('utf-8')).hexdigest()

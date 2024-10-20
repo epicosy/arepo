@@ -1,6 +1,6 @@
 import argparse
 from arepo.db import DatabaseConnection
-from arepo.utils import TABLE_NAMES
+from arepo.utils.db import TABLE_NAMES
 
 
 def main():
@@ -38,4 +38,3 @@ def main():
             print(entry.id, entry.name)
 
         session.close()
-

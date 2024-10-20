@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, PrimaryKeyConstraint
 
 from arepo.base import Base
+from arepo.mixins import EntityLoaderMixin, AssociationLoaderMixin
 
 
 class LabelModel(Base):
@@ -28,7 +29,7 @@ class FunctionModel(Base):
     content = Column('content', String, nullable=False)
 
 
-class TopicModel(Base):
+class TopicModel(Base, EntityLoaderMixin):
     __tablename__ = "topic"
 
     id = Column('id', String, primary_key=True)
@@ -41,7 +42,7 @@ class TopicModel(Base):
         Base.metadata.bind.execute(TopicModel.__table__.insert(), topics_df.to_dict(orient="records"))
 
 
-class RepositoryTopicModel(Base):
+class RepositoryTopicModel(Base, AssociationLoaderMixin):
     __tablename__ = 'repository_topic'
     __table_args__ = (
         PrimaryKeyConstraint('repository_id', 'topic_id'),

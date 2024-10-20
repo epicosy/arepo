@@ -1,10 +1,11 @@
 from arepo.base import Base
+from arepo.mixins import EntityLoaderMixin, AssociationLoaderMixin
 
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint
 
 
-class TagModel(Base):
+class TagModel(Base, EntityLoaderMixin):
     __tablename__ = "tag"
 
     id = Column('id', Integer, primary_key=True)
@@ -16,7 +17,7 @@ class TagModel(Base):
     )
 
 
-class TagAssociationModel(Base):
+class TagAssociationModel(Base, AssociationLoaderMixin):
     __tablename__ = 'tag_association'
     __table_args__ = (
         ForeignKeyConstraint(('tag_id',), ['tag.id']),

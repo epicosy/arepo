@@ -1,11 +1,13 @@
 from arepo.base import Base
+from arepo.mixins import EntityLoaderMixin, AssociationLoaderMixin
+from arepo.utils.misc import generate_id
 
 from sqlalchemy import (Column, Integer, String, Boolean, DateTime, ForeignKey, PrimaryKeyConstraint,
                         ForeignKeyConstraint)
 from sqlalchemy.orm import relationship
 
 
-class CommitModel(Base):
+class CommitModel(Base, EntityLoaderMixin):
     __tablename__ = "commit"
 
     id = Column('id', String, primary_key=True)
@@ -31,8 +33,20 @@ class CommitModel(Base):
         backref="children"
     )
 
+    def __init__(self, **kwargs):
+        """
+            If the ID is not provided, it will be generated from the URL.
+        """
+        super().__init__(**kwargs)
+        assert self.sha is not None, "sha must be provided."
+        assert self.repository_id is not None, "repository_id must be provided."
 
-class CommitAssociationModel(Base):
+        if self.id is None:
+            # TODO: should be defined as read-only in the schema to avoid issues with future changes
+            self.id = generate_id(f"{self.repository_id}_{self.sha}")
+
+
+class CommitAssociationModel(Base, AssociationLoaderMixin):
     __tablename__ = "commit_association"
     __table_args__ = (
         ForeignKeyConstraint(('commit_id',), ['commit.id']),
@@ -45,7 +59,7 @@ class CommitAssociationModel(Base):
     source_id = Column(String, ForeignKey('source.id'), primary_key=True)
 
 
-class CommitFileModel(Base):
+class CommitFileModel(Base, EntityLoaderMixin):
     __tablename__ = "commit_file"
 
     id = Column('id', String, primary_key=True)
@@ -62,7 +76,7 @@ class CommitFileModel(Base):
     functions = relationship("FunctionModel", backref="commit_file")
 
 
-class CommitParentModel(Base):
+class CommitParentModel(Base, EntityLoaderMixin):
     __tablename__ = "commit_parent"
     __table_args__ = (
         PrimaryKeyConstraint('commit_id', 'parent_id'),

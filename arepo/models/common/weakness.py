@@ -1,4 +1,5 @@
 from arepo.base import Base
+from arepo.mixins import EntityLoaderMixin
 
 from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
@@ -22,7 +23,7 @@ class GroupingModel(Base):
     child_id = Column('child_id', Integer, ForeignKey('cwe.id'))
 
 
-class CWEModel(Base):
+class CWEModel(Base, EntityLoaderMixin):
     __tablename__ = "cwe"
 
     id = Column('id', Integer, primary_key=True)
