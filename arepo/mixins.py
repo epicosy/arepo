@@ -6,7 +6,7 @@ class EntityLoaderMixin:
 
     @classmethod
     def get_all_ids(cls, session):
-        return set(session.query(cls.id).all())
+        return set(id_tuple[0] for id_tuple in session.query(cls.id).all())
 
     @classmethod
     def load_all(cls, session):
