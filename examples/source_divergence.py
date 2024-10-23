@@ -7,7 +7,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import aliased
 
 
-def get_non_overlap_vulnerability_ids(session, model, join_column, source_1, source_2):
+def get_non_overlap_vulnerability_ids(session, model, source_1, source_2):
     alias_1 = aliased(model)
     alias_2 = aliased(model)
 
@@ -59,7 +59,6 @@ print("CVEs with repositories in NVD and not in OSV:",
           get_non_overlap_vulnerability_ids(
               session,
               model=RepositoryAssociationModel,
-              join_column='repository_id',
               source_1='nvd_id',
               source_2='osv_id'
           )
@@ -71,7 +70,6 @@ print("CVEs with repositories in OSV and not in NVD:",
           get_non_overlap_vulnerability_ids(
               session,
               model=RepositoryAssociationModel,
-              join_column='repository_id',
               source_1='osv_id',
               source_2='nvd_id'
           )
@@ -83,7 +81,6 @@ print("CVEs with commits in NVD and not in OSV:",
           get_non_overlap_vulnerability_ids(
               session,
               model=CommitAssociationModel,
-              join_column='commit_id',
               source_1='nvd_id',
               source_2='osv_id'
           )
@@ -95,7 +92,6 @@ print("CVEs with commits in OSV and not in NVD:",
           get_non_overlap_vulnerability_ids(
               session,
               model=CommitAssociationModel,
-              join_column='commit_id',
               source_1='osv_id',
               source_2='nvd_id'
           )
