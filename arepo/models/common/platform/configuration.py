@@ -1,9 +1,11 @@
 from arepo.base import Base
+from arepo.mixins import EntityLoaderMixin
+
 from sqlalchemy import Column, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 
-class ConfigurationModel(Base):
+class ConfigurationModel(Base, EntityLoaderMixin):
     __tablename__ = "configuration"
 
     id = Column('id', String, primary_key=True)
@@ -16,7 +18,7 @@ class ConfigurationModel(Base):
     nodes = relationship("NodeModel", back_populates="configuration")
 
 
-class NodeModel(Base):
+class NodeModel(Base, EntityLoaderMixin):
     __tablename__ = "node"
 
     id = Column('id', String, primary_key=True)

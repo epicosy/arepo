@@ -1,4 +1,4 @@
-from arepo.utils import populate
+from arepo.utils.db import populate
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine

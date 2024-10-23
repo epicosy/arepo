@@ -4,10 +4,12 @@ from arepo.models.source import SourceModel
 
 source_data = [
     {
+        "id": "snyk-source",
         "name": "Snyk",
         "email": "report@snyk.io"
     },
     {
+        "id": "nvd-source",
         "name": "NVD",
         "email": "nvd@nist.gov"
     }
@@ -20,6 +22,7 @@ def test_insert_sources(database_session):
     for source in source_data:
         try:
             source_model = SourceModel(
+                id=source["id"],
                 name=source["name"],
                 email=source["email"]
             )

@@ -1,9 +1,12 @@
 from arepo.base import Base
+from arepo.mixins import EntityLoaderMixin, AssociationLoaderMixin
+from arepo.utils.misc import generate_id
 
 from sqlalchemy import Column, String, ForeignKey, Boolean, Float, ForeignKeyConstraint
+from sqlalchemy.orm import relationship
 
 
-class CVSS2Model(Base):
+class CVSS2Model(Base, EntityLoaderMixin):
     __tablename__ = "cvss2"
 
     id = Column(String, primary_key=True)
@@ -27,9 +30,33 @@ class CVSS2Model(Base):
     # type = Column('type', String, nullable=True)  # TODO: to be added later
     # version = Column('version', String, nullable=True)  # TODO: put back if needed
 
+    associations = relationship(
+        "CVSS2AssociationModel",
+        back_populates="cvss"
+    )
+
+    def __init__(self, **kwargs):
+        """
+            If the ID is not provided, it will be generated from the columns.
+        """
+        super().__init__(**kwargs)
+
+        if self.id is None:
+            # TODO: should be defined as read-only in the schema to avoid issues with future changes
+            # Get only the defined attributes from the class using __table__.columns
+            attributes = {
+                col.name: str(getattr(self, col.name)) for col in self.__table__.columns
+                if getattr(self, col.name) is not None
+            }
+
+            # Create a string representation of the attributes sorted by key
+            sorted_attributes_str = ''.join(f"{key}={value}" for key, value in sorted(attributes.items()))
+
+            self.id = generate_id(sorted_attributes_str)
+
 
 # TODO: there must be a better way to handle this
-class CVSS2AssociationModel(Base):
+class CVSS2AssociationModel(Base, AssociationLoaderMixin):
     __tablename__ = 'cvss2_association'
     __table_args__ = (
         ForeignKeyConstraint(('cvss_id',), ['cvss2.id']),
@@ -40,3 +67,7 @@ class CVSS2AssociationModel(Base):
     cvss_id = Column(String, ForeignKey('cvss2.id'), primary_key=True)
     source_id = Column(String, ForeignKey('source.id'), primary_key=True)
     vulnerability_id = Column(String, ForeignKey('vulnerability.id'), primary_key=True)
+
+    cvss = relationship("CVSS2Model", back_populates="associations")
+    source = relationship("SourceModel", back_populates="cvss2")
+    vulnerability = relationship("VulnerabilityModel", back_populates="cvss2")

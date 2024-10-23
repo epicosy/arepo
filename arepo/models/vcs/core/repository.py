@@ -1,10 +1,12 @@
 from arepo.base import Base
+from arepo.mixins import EntityLoaderMixin, AssociationLoaderMixin
+from arepo.utils.misc import generate_id
 
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 
 
-class RepositoryModel(Base):
+class RepositoryModel(Base, EntityLoaderMixin):
     __tablename__ = "repository"
 
     id = Column('id', String, primary_key=True)
@@ -20,11 +22,23 @@ class RepositoryModel(Base):
     commits_count = Column('commits_count', Integer, nullable=True)
     commits = relationship("CommitModel", backref="repository")
 
+    def __init__(self, **kwargs):
+        """
+            If the ID is not provided, it will be generated from the URL.
+        """
+        super().__init__(**kwargs)
+        assert self.name is not None, "name must be provided."
+        assert self.owner is not None, "owner must be provided."
+
+        if self.id is None:
+            # TODO: should be defined as read-only in the schema to avoid issues with future changes
+            self.id = generate_id(f"{self.owner}/{self.name}")
+
     def __repr__(self):
         return f"<Repository {self.owner}/{self.name}>"
 
 
-class RepositoryAssociationModel(Base):
+class RepositoryAssociationModel(Base, AssociationLoaderMixin):
     __tablename__ = "repository_association"
     __table_args__ = (
         ForeignKeyConstraint(('repository_id',), ['repository.id']),
