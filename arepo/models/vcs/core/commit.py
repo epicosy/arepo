@@ -75,6 +75,19 @@ class CommitFileModel(Base, EntityLoaderMixin):
     diff_blocks = relationship("DiffBlockModel", backref="commit_file")
     functions = relationship("FunctionModel", backref="commit_file")
 
+    def __init__(self, **kwargs):
+        """
+            If the ID is not provided, it will be generated from the URL.
+        """
+        super().__init__(**kwargs)
+        assert self.filename is not None, "filename must be provided."
+        assert self.commit_id is not None, "commit_id must be provided."
+
+        if self.id is None:
+            # TODO: should be defined as read-only in the schema to avoid issues with future changes
+            # TODO: probably it should be the sha from the commit instead of the commit_id
+            self.id = generate_id(f"{self.commit_id}_{self.filename}")
+
 
 class CommitParentModel(Base, EntityLoaderMixin):
     __tablename__ = "commit_parent"

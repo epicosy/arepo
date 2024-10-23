@@ -29,6 +29,7 @@ class FunctionModel(Base):
     content = Column('content', String, nullable=False)
 
 
+# TODO: reconsider the purpose/existence of this model
 class TopicModel(Base, EntityLoaderMixin):
     __tablename__ = "topic"
 
@@ -42,6 +43,7 @@ class TopicModel(Base, EntityLoaderMixin):
         Base.metadata.bind.execute(TopicModel.__table__.insert(), topics_df.to_dict(orient="records"))
 
 
+# TODO: idem
 class RepositoryTopicModel(Base, AssociationLoaderMixin):
     __tablename__ = 'repository_topic'
     __table_args__ = (
