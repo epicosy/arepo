@@ -26,3 +26,62 @@ INSERT INTO target_artifacts VALUES
 ('166d1d0864039e13c438fa27e34f557a1241dd030bdecb18ab4c9dc4abbd08f4','9c809d6691829f11a6499da2fd3e6a046acdb7ccaa3c086986b74189c5121288','report','1d8ea7923dae7c8f136912b6bdca95dcb52e80bc',1),
 ('166d1d0864039e13c438fa27e34f557a1241dd030bdecb18ab4c9dc4abbd08f4','a4b3f937b6c1dc66386233aba5c2bf051f70994bdc1dfc30bedc4a84b34ab03c','report','1d8ea7923dae7c8f136912b6bdca95dcb52e80bc',2);
 INSERT INTO target_reviews SELECT target_id,'pending','reviewer-01',NULL,now() FROM targets;
+
+UPDATE artifacts SET content = '_forceinline void Unpack::CopyString(uint Length,uint Distance)
+{
+  size_t SrcPtr=UnpPtr-Distance;
+  if (SrcPtr<MaxWinSize-MAX_LZ_MATCH && UnpPtr<MaxWinSize-MAX_LZ_MATCH)
+  {
+    byte *Src=Window+SrcPtr;
+    byte *Dest=Window+UnpPtr;
+    UnpPtr+=Length;
+    while (Length>=8)
+    {
+      Dest[0]=Src[0]; Dest[1]=Src[1]; Dest[2]=Src[2]; Dest[3]=Src[3];
+      Dest[4]=Src[4]; Dest[5]=Src[5]; Dest[6]=Src[6]; Dest[7]=Src[7];
+      Src+=8; Dest+=8; Length-=8;
+    }
+    if (Length>0) { Dest[0]=Src[0];
+    if (Length>1) { Dest[1]=Src[1];
+    if (Length>2) { Dest[2]=Src[2];
+    if (Length>3) { Dest[3]=Src[3];
+    if (Length>4) { Dest[4]=Src[4];
+    if (Length>5) { Dest[5]=Src[5];
+    if (Length>6) { Dest[6]=Src[6]; } } } } } } }
+  }
+  else
+    while (Length-- > 0)
+    {
+      Window[UnpPtr]=Window[SrcPtr++ & MaxWinMask];
+      UnpPtr=(UnpPtr+1) & MaxWinMask;
+    }
+}' WHERE artifact_id='b4914966fec23c73b8ba9336fdaa62ea549a8ea6dba1d8c24ded22b3861d47dc';
+UPDATE artifacts SET content = '_forceinline void Unpack::CopyString(uint Length,uint Distance)
+{
+  size_t SrcPtr=UnpPtr-Distance;
+  if (SrcPtr<MaxWinSize-MAX_INC_LZ_MATCH && UnpPtr<MaxWinSize-MAX_LZ_MATCH)
+  {
+    byte *Src=Window+SrcPtr;
+    byte *Dest=Window+UnpPtr;
+    UnpPtr+=Length;
+    while (Length>=8)
+    {
+      Dest[0]=Src[0]; Dest[1]=Src[1]; Dest[2]=Src[2]; Dest[3]=Src[3];
+      Dest[4]=Src[4]; Dest[5]=Src[5]; Dest[6]=Src[6]; Dest[7]=Src[7];
+      Src+=8; Dest+=8; Length-=8;
+    }
+    if (Length>0) { Dest[0]=Src[0];
+    if (Length>1) { Dest[1]=Src[1];
+    if (Length>2) { Dest[2]=Src[2];
+    if (Length>3) { Dest[3]=Src[3];
+    if (Length>4) { Dest[4]=Src[4];
+    if (Length>5) { Dest[5]=Src[5];
+    if (Length>6) { Dest[6]=Src[6]; } } } } } } }
+  }
+  else
+    while (Length-- > 0)
+    {
+      Window[UnpPtr]=Window[SrcPtr++ & MaxWinMask];
+      UnpPtr=(UnpPtr+1) & MaxWinMask;
+    }
+}' WHERE artifact_id='5e53cbe3190bcadd8509fac3ace765a14746dafc72c8277d3600da82783f8554';
