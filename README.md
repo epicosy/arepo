@@ -28,6 +28,21 @@ docker exec findthemall-db psql -U findthemall -d findthemall -c "TABLE schema_m
 
 Credentials above are for local development only.
 
+## Updating an existing local database container
+
+Rebuild and recreate the container while retaining the named volume:
+
+```sh
+docker rm -f findthemall-db
+docker build -t findthemall-arepo .
+docker run -d --name findthemall-db --network findthemall -p 5432:5432 \
+  -e POSTGRES_DB=findthemall -e POSTGRES_USER=findthemall \
+  -e POSTGRES_PASSWORD=findthemall -v findthemall_pgdata:/var/lib/postgresql/data \
+  findthemall-arepo
+```
+
+Do **not** remove `findthemall_pgdata`. The new entrypoint recognizes the existing `001` schema and applies the new `002` migration to that volume.
+
 ## Model
 
 An examination links independent root-cause and manifestation target threads. It is not a vulnerability record. Target, candidate-location, and reproduction source records are immutable inputs; reviewer decisions/notes live in separate review tables.
