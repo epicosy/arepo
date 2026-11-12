@@ -1,7 +1,0 @@
-language: python
-python:
-  "3.9.13"
-install:
-  - pip install .
-script:
-  - if [[ $TRAVIS_COMMIT_MESSAGE == *"[skip tests]"* ]]; then echo "Skipping tests"; else python -m pytest; fi
