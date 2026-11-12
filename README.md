@@ -4,6 +4,14 @@ Minimal PostgreSQL schema and seed data for the FindThemAll examination vertical
 
 ## Run
 
+Create the shared network once:
+
+```sh
+docker network create findthemall
+```
+
+Then build and run:
+
 ```sh
 docker build -t findthemall-arepo .
 docker run -d --name findthemall-db --network findthemall -p 5432:5432 \
