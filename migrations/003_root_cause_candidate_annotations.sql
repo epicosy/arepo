@@ -23,6 +23,15 @@ WHERE candidate_id = 'cloc-ce3eab88-dcec-4f1e-b385-53060fe19cdb'
 DELETE FROM candidate_locations
 WHERE candidate_id = 'cloc-eaaf035d-95ab-417a-988a-3fd9ba7eb40d';
 
+-- If the candidate was reviewed before its own updated_at column existed,
+-- carry forward the review timestamp only for an actual accept/reject decision.
+UPDATE candidate_locations c
+SET updated_at = cr.updated_at
+FROM candidate_reviews cr
+WHERE cr.candidate_id = c.candidate_id
+  AND cr.status IN ('accepted','rejected')
+  AND cr.updated_at > c.created_at;
+
 CREATE TABLE IF NOT EXISTS annotations (
   annotation_id text PRIMARY KEY,
   schema_version text NOT NULL,
