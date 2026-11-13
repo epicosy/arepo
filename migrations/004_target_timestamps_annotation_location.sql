@@ -6,11 +6,18 @@ ALTER TABLE targets
   ADD COLUMN IF NOT EXISTS updated_at timestamptz;
 
 UPDATE targets t
-SET created_at = COALESCE(t.created_at, e.created_at, now()),
-    updated_at = COALESCE(t.updated_at, tr.updated_at, t.created_at, e.created_at, now())
-FROM examinations e
-LEFT JOIN target_reviews tr ON tr.target_id = t.target_id
-WHERE e.examination_id = t.examination_id;
+SET created_at = COALESCE(
+      t.created_at,
+      (SELECT e.created_at FROM examinations e WHERE e.examination_id=t.examination_id),
+      now()
+    ),
+    updated_at = COALESCE(
+      t.updated_at,
+      (SELECT tr.updated_at FROM target_reviews tr WHERE tr.target_id=t.target_id),
+      t.created_at,
+      (SELECT e.created_at FROM examinations e WHERE e.examination_id=t.examination_id),
+      now()
+    );
 
 ALTER TABLE targets
   ALTER COLUMN created_at SET DEFAULT now(),
