@@ -41,13 +41,13 @@ docker run -d --name findthemall-db --network findthemall -p 5432:5432 \
   findthemall-arepo
 ```
 
-Do **not** remove `findthemall_pgdata`. The new entrypoint recognizes the existing `001` schema and applies the new `002` migration to that volume.
+Do **not** remove `findthemall_pgdata`. The new entrypoint recognizes the existing `001` schema and applies any unapplied numbered migrations, including `002` and `003`, to that volume.
 
 ## Model
 
-An examination links independent root-cause and manifestation target threads. It is not a vulnerability record. Target, candidate-location, and reproduction source records are immutable inputs; reviewer decisions/notes live in separate review tables.
+An examination links independent root-cause and manifestation target threads. It is not a vulnerability record. Target, candidate-location, and reproduction source records are immutable inputs; reviewer decisions/notes live in separate review tables. Candidate records have `created_at` and `updated_at`; annotation records retain independent `kind` and `status` fields and carry `created_at`, `updated_at`, and submission metadata.
 
-Migration `002_candidates_reproduction_unrar.sql` imports the two candidate-location records and one reproduction record for UnRAR, including its runner log and execution context. Candidate revision IDs are retained from their storage paths. The source corpus currently has a discrepancy worth reviewing: both candidate JSON records point to the root-cause target, although the candidate migration guidance describes the crash-side candidate as belonging to the manifestation target. This seed preserves the source records as stored rather than silently changing their relationships.
+Migration `002_candidates_reproduction_unrar.sql` imports the candidate-location and reproduction records. Migration `003_root_cause_candidate_annotations.sql` corrects the UnRAR candidate revision to the root-cause target's `patch_base` revision (`637fc844…`), removes the second candidate whose revision does not exist in the project history, and imports two root-cause annotations. The retained candidate keeps the correct patch-base function artifact ID. The original candidate file was stored under the crash-revision directory, but its `artifact_id` identifies the patch-base artifact; the migration resolves that inconsistency in favor of the target's explicit artifact association. The annotation `model_id` references the candidate-location ID, not the former bug ID.
 
 ## Artifact identity and integrity
 
