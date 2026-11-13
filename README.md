@@ -41,7 +41,7 @@ docker run -d --name findthemall-db --network findthemall -p 5432:5432 \
   findthemall-arepo
 ```
 
-Do **not** remove `findthemall_pgdata`. The new entrypoint recognizes the existing `001` schema and applies any unapplied numbered migrations, including `002` and `003`, to that volume.
+Do **not** remove `findthemall_pgdata`. The new entrypoint recognizes the existing `001` schema and applies any unapplied numbered migrations, including `002`, `003`, and `004`, to that volume.
 
 ## Model
 
