@@ -68,13 +68,6 @@ INSERT INTO annotations (
   '["the code performs a comparison to decide whether it can do an optimized copy, but it uses the wrong bound (wrong factor), so it sometimes permits a copy that exceeds the window."]'::jsonb,
   now(),now()
 )
-ON CONFLICT (annotation_id) DO UPDATE SET
-  model = EXCLUDED.model,
-  model_id = EXCLUDED.model_id,
-  field = EXCLUDED.field,
-  taxonomy = EXCLUDED.taxonomy,
-  value = EXCLUDED.value,
-  confidence = EXCLUDED.confidence,
-  notes = EXCLUDED.notes;
+ON CONFLICT (annotation_id) DO NOTHING;
 
 COMMIT;
